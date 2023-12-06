@@ -16,13 +16,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type typeTodo from "../types/typeTodo";
 
-const newTodo = ref([
-    {
-        todo : '',
-        author : ''
-    }
-]);
+const newTodo = ref<typeTodo[]>([]);
 
 const addTodo = async () => {
     let response = await fetch('http://localhost:2100/api/addTodo',{
@@ -39,7 +35,8 @@ const addTodo = async () => {
         console.log(err);
     });
 
-    console.log(response);
+    newTodo.value.author = '';
+    newTodo.value.todo = '';
 }
 
 
