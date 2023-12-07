@@ -15,15 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import useTodo from '../composables/useTodo';
+import { onMounted } from 'vue';
 
-const infoTodo = ref([
-    {
-        id : '',
-        author : '',
-        todo : ''
-    }
-]);
 const props = defineProps( {
     idTodo: {
         type: String,
@@ -31,35 +25,15 @@ const props = defineProps( {
       }
 });
 
-const modifyTodo = async () => {
-    let response = await fetch('http://127.0.0.1:2100/api/updatedTodo/' + infoTodo.value.id,{
-        method : "PUT",
-        headers: {
-        "Content-Type": "application/json",
-        },
-        body : JSON.stringify({
-            todo :infoTodo.value.todo,
-            author : infoTodo.value.author
-        }),
-    },).then((res) => res.json())
-    .catch((err) => {
-        console.log(err);
-    });
 
-    console.log(response);
-    
-
-}
-
+const {
+    modifyTodo,
+    getTodo,
+    infoTodo
+} = useTodo();
 onMounted(async() => {
     let id = props.idTodo;
-    let response =await fetch("http://127.0.0.1:2100/api/todo/" + id)
-    .then((res) => res.json())
-    .catch((err) => console.log(err)
-    );
-    infoTodo.value.author = response.author;
-    infoTodo.value.todo = response.todo;
-    infoTodo.value.id = response._id;
+    await getTodo(id);
 })
 
 </script>

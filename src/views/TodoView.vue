@@ -13,36 +13,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted} from 'vue';
+import useTodo from '../composables/useTodo';
 
+const { 
+    destroyTodo,
+    getAllTodo,
+    getUrl,
+    todo
+} = useTodo();
 
-const todo = ref([]);
-
-const destroyTodo = async(idTodo : string) => {
-
-    let response = await fetch('http://localhost:2100/api/deleteTodo/' + idTodo,{
-        method : 'DELETE',
-    }).then((res) => res.json())
-    .then(() => window.location.href = '/todo')
-    .catch((err) => {
-        console.log(err);
-        
-    });
-    
-}
-
-const getUrl = (id : string) => {
-    return "/" + id + "/modifyTodo"
-}
 
 onMounted(async() => {
-    let response = await fetch('http://localhost:2100/api/getTodo')
-    .then((res) => res.json())
-    .catch((err) =>{
-        console.log(err);
-    });
-    todo.value = response;
-    
+    getAllTodo();
 });
 
 </script>
