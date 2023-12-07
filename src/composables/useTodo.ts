@@ -3,13 +3,22 @@ import type typeTodo from "@/types/typeTodo";
 import type typeInfoTodo from "@/types/typeInfoTodo";
 
 export default function useTodo(){
-    const destroyTodo = async(idTodo : string) => {
+    const todo = ref();
+    const getAllTodo = async() => {
+        let response = await fetch('http://localhost:2100/api/getTodo')
+    .then((res) => res.json())
+    .catch((err) =>{
+        console.log(err);
+    });
+    todo.value = response;
+    }
 
+    const destroyTodo = async(idTodo : string) => {
 
         let response = await fetch('http://localhost:2100/api/deleteTodo/' + idTodo,{
             method : 'DELETE',
         }).then((res) => res.json())
-        .then(() => window.location.href = '/todo')
+        .then(() => getAllTodo())
         .catch((err) => {
             console.log(err);
             
@@ -21,15 +30,6 @@ export default function useTodo(){
         return "/" + id + "/modifyTodo"
     }
 
-    const todo = ref();
-    const getAllTodo = async() => {
-        let response = await fetch('http://localhost:2100/api/getTodo')
-    .then((res) => res.json())
-    .catch((err) =>{
-        console.log(err);
-    });
-    todo.value = response;
-    }
 
     
     const newTodo = ref<typeTodo>({
